@@ -1,0 +1,4 @@
+2022-02-01 19:03:01 [main] [findAllActiveUsers] [110]
+            INFO  bicyclerental.model.dao.impl.UserDaoImpl - List: [User {userId: 1, firstName: Vladimir, lastName: Ivanukovich, login: vov4ic, email: vov4ic@mail.ru, role: USER, userStatus: ACTIVE}]
+2022-02-01 19:03:28 [main] [findAllActiveUsers] [110]
+            INFO  bicyclerental.model.dao.impl.UserDaoImpl - List: []
