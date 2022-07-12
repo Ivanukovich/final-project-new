@@ -1,17 +1,24 @@
 package by.epam.bicyclerental.controller.command.impl.administrator;
 
 import by.epam.bicyclerental.controller.command.Command;
-import by.epam.bicyclerental.controller.command.Literal;
+import by.epam.bicyclerental.controller.command.Parameter;
 import by.epam.bicyclerental.controller.Router;
 import by.epam.bicyclerental.exception.CommandException;
 import by.epam.bicyclerental.exception.ServiceException;
+import by.epam.bicyclerental.model.entity.User;
+import by.epam.bicyclerental.model.entity.UserRole;
 import by.epam.bicyclerental.model.service.UserService;
 import by.epam.bicyclerental.model.service.impl.UserServiceImpl;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static by.epam.bicyclerental.controller.command.PagePath.ADMINISTRATOR_PAGE;
+import java.util.List;
+import java.util.Optional;
+
+import static by.epam.bicyclerental.controller.command.PagePath.*;
+import static by.epam.bicyclerental.controller.command.Parameter.USER;
+import static by.epam.bicyclerental.controller.command.Parameter.USER_LIST;
 
 public class AddAdministratorCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -19,13 +26,17 @@ public class AddAdministratorCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        long userId = Long.parseLong(request.getParameter(Literal.USER_ID));
+        long userId = Long.parseLong(request.getParameter(Parameter.USER_ID));
         try{
-            userService.createAdministrator(userId);
+            userService.updateUserRole(userId, UserRole.ADMINISTRATOR);
+            Optional<User> user = userService.findByUserId(userId);
+            if (user.isPresent()) {
+                request.setAttribute(USER, user.get());
+            }
+            return new Router(USER_EDIT_PAGE, Router.RouterType.FORWARD);
         }
         catch (ServiceException e){
-            throw new CommandException("", e);
+            throw new CommandException("Exception in AddAdministratorCommand: ", e);
         }
-        return new Router(ADMINISTRATOR_PAGE, Router.RouterType.REDIRECT);
     }
 }

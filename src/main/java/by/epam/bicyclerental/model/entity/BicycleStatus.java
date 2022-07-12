@@ -2,7 +2,7 @@ package by.epam.bicyclerental.model.entity;
 
 public enum BicycleStatus {
     FREE("free"),
-    ACTIVE("active"),
+    RENTED("rented"),
     INACTIVE("inactive");
     private String statusName;
 

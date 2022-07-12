@@ -8,17 +8,20 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.management.relation.Role;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 public class BicycleDaoImpl implements BicycleDao {
     private static final Logger logger = LogManager.getLogger();
+
+    private static final String DELETE_BICYCLE_QUERY = "DELETE FROM bicycle " +
+            "WHERE bicycle_id = ?;";
 
     private static final String REMOVE_BICYCLE_QUERY = "DELETE FROM bicycle_rental_point " +
             "WHERE bicycle_id = ?;";
@@ -61,7 +64,7 @@ public class BicycleDaoImpl implements BicycleDao {
             "WHERE bicycle_id = ?;";
 
     private static final String UPDATE_QUERY = "UPDATE bicycle " +
-            "SET model_id = ? " +
+            "SET model = ?, " +
             "status_id = (SELECT status_id FROM bicycle_status WHERE status = ?) " +
             "WHERE bicycle_id = ?;";
 
@@ -74,36 +77,33 @@ public class BicycleDaoImpl implements BicycleDao {
     @Override
     public List<Bicycle> findAllBicycles() throws DaoException {
         List<Bicycle> bicycleList = new ArrayList<>();
-        PreparedStatement statement = null;
-        try{
-            Connection connection = CustomConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(SELECT_ALL_BICYCLES_QUERY);
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BICYCLES_QUERY)){
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
                 bicycleList.add(extract(resultSet));
             }
-            logger.log(Level.INFO,"List: {}", bicycleList);
+            logger.log(Level.INFO,"Bicycle list: {}", bicycleList);
         } catch (SQLException e) {
-            throw new DaoException(e);
+            throw new DaoException("Exception while finding all bicycles: ", e);
         }
         return bicycleList;
     }
 
     @Override
-    public List<Bicycle> findAllFreeBicycles(long rental_point_id) throws DaoException {
+    public List<Bicycle> findAllFreeBicyclesAtRentalPoint(long rental_point_id) throws DaoException {
         List<Bicycle> bicycleList = new ArrayList<>();
-        PreparedStatement statement = null;
-        try{
-            Connection connection = CustomConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(SELECT_ALL_FREE_BICYCLES_QUERY);
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_FREE_BICYCLES_QUERY)){
             statement.setLong(1, rental_point_id);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
                 bicycleList.add(extract(resultSet));
             }
-            logger.log(Level.INFO,"List: {}", bicycleList);
+            logger.log(Level.INFO,"Bicycle list: {}", bicycleList);
         } catch (SQLException e) {
-            throw new DaoException(e);
+            logger.log(Level.ERROR,"Exception while finding all free bicycles");
+            throw new DaoException("Exception while finding all free bicycles: ", e);
         }
         return bicycleList;
     }
@@ -111,18 +111,17 @@ public class BicycleDaoImpl implements BicycleDao {
     @Override
     public List<Bicycle> findAllBicyclesAtRentalPoint(long rental_point_id) throws DaoException {
         List<Bicycle> bicycleList = new ArrayList<>();
-        PreparedStatement statement = null;
-        try{
-            Connection connection = CustomConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(SELECT_ALL_BICYCLES_AT_RENTAL_POINT_QUERY);
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BICYCLES_AT_RENTAL_POINT_QUERY)){
             statement.setLong(1, rental_point_id);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
                 bicycleList.add(extract(resultSet));
             }
-            logger.log(Level.INFO,"List: {}", bicycleList);
+            logger.log(Level.INFO,"Bicycle list: {}", bicycleList);
         } catch (SQLException e) {
-            throw new DaoException(e);
+            logger.log(Level.ERROR,"Exception while finding all bicycles at rental point");
+            throw new DaoException("Exception while finding all bicycles at rental point: ", e);
         }
         return bicycleList;
     }
@@ -130,129 +129,129 @@ public class BicycleDaoImpl implements BicycleDao {
     @Override
     public List<Bicycle> findAllInactiveBicycles() throws DaoException {
         List<Bicycle> bicycleList = new ArrayList<>();
-        PreparedStatement statement = null;
-        try{
-            Connection connection = CustomConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(SELECT_ALL_INACTIVE_BICYCLES_QUERY);
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_INACTIVE_BICYCLES_QUERY)){
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
                 bicycleList.add(extract(resultSet));
             }
-            logger.log(Level.INFO,"List: {}", bicycleList);
+            logger.log(Level.INFO,"Bicycle list: {}", bicycleList);
         } catch (SQLException e) {
-            throw new DaoException(e);
+            logger.log(Level.ERROR,"Exception while finding all inactive bicycles");
+            throw new DaoException("Exception while finding all inactive bicycles: ", e);
         }
         return bicycleList;
     }
 
     @Override
-    public Bicycle findByBicycleId(long bicycle_id) throws DaoException {
-        Bicycle bicycle = null;
-        try {
-            Connection connection = CustomConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(SELECT_BY_BICYCLE_ID_QUERY);
-            statement.setLong(1, bicycle_id);
+    public Optional<Bicycle> findByBicycleId(long bicycleId) throws DaoException {
+        Optional<Bicycle> bicycle = Optional.empty();
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SELECT_BY_BICYCLE_ID_QUERY)){
+            statement.setLong(1, bicycleId);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                bicycle = extract(resultSet);
+                bicycle = Optional.of(extract(resultSet));
             }
+            return bicycle;
         } catch (SQLException e) {
-            throw new DaoException("", e);
+            logger.log(Level.ERROR,"Exception while finding the bicycle by bicycle id");
+            throw new DaoException("Exception while finding the bicycle by bicycle id: ", e);
         }
-        return bicycle;
     }
 
     @Override
-    public Bicycle findByUserId(long user_id) throws DaoException {
-        Bicycle bicycle = null;
-        try {
-            Connection connection = CustomConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(SELECT_BY_USER_ID_QUERY);
-            statement.setLong(1, user_id);
+    public Optional<Bicycle> findByUserId(long userId) throws DaoException {
+        Optional<Bicycle> bicycle = Optional.empty();
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SELECT_BY_USER_ID_QUERY)){
+            statement.setLong(1, userId);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                bicycle = extract(resultSet);
+                bicycle = Optional.of(extract(resultSet));
             }
+            return bicycle;
         } catch (SQLException e) {
-            throw new DaoException("", e);
+            logger.log(Level.ERROR,"Exception while finding the bicycle by user id");
+            throw new DaoException("Exception while finding the bicycle by user id: ", e);
         }
-        return bicycle;
     }
 
     @Override
     public boolean updateBicycleStatus(long bicycleId, BicycleStatus status) throws DaoException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try{
-            connection = CustomConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(UPDATE_BICYCLE_STATUS_QUERY);
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE_BICYCLE_STATUS_QUERY)){
             statement.setString(1, status.getStatusName());
             statement.setLong(2, bicycleId);
             return statement.executeUpdate() == 1;
         } catch (SQLException e) {
-            throw new DaoException(e);
+            logger.log(Level.ERROR,"Exception while updating the bicycle status");
+            throw new DaoException("Exception while updating the bicycle status: ", e);
         }
     }
 
     @Override
     public boolean update(Bicycle bicycle) throws DaoException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = CustomConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(UPDATE_QUERY);
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)){
             statement.setString(1, bicycle.getModel());
-            statement.setString(2, bicycle.getStatus().getStatusName());
+            statement.setString(2, bicycle.getBicycleStatus().getStatusName());
             statement.setLong(3, bicycle.getBicycleId());
-            statement.executeUpdate();
+            return statement.executeUpdate() == 1;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user: ", e);
+            logger.log(Level.ERROR,"Exception while updating the bicycle");
+            throw new DaoException("Exception while updating the bicycle: ", e);
         }
-        return true;
     }
 
     @Override
     public boolean create(Bicycle bicycle) throws DaoException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = CustomConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(INSERT_BICYCLE_QUERY);
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(INSERT_BICYCLE_QUERY)){
             statement.setString(1, bicycle.getModel());
-            statement.setString(2, bicycle.getStatus().getStatusName());
+            statement.setString(2, bicycle.getBicycleStatus().getStatusName());
             return statement.executeUpdate() != 0;
         } catch (SQLException e) {
-            throw new DaoException("", e);
+            logger.log(Level.ERROR,"Exception while creating the bicycle");
+            throw new DaoException("Exception while creating the bicycle: ", e);
         }
     }
 
     @Override
-    public boolean rentBicycle(long bicycle_id, long user_id, long rental_point_id) throws DaoException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = CustomConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(RENT_BICYCLE_QUERY);
-            statement.setLong(1, bicycle_id);
-            statement.setLong(2, user_id);
-            statement.setLong(3, rental_point_id);
+    public boolean rentBicycle(long bicycleId, long userId, long rentalPointId) throws DaoException {
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(RENT_BICYCLE_QUERY)){
+            statement.setLong(1, bicycleId);
+            statement.setLong(2, userId);
+            statement.setLong(3, rentalPointId);
             return statement.executeUpdate() != 0;
-        } catch (SQLException throwables) {
-            throw new DaoException("");
+        } catch (SQLException e) {
+            logger.log(Level.ERROR,"Exception while renting the bicycle");
+            throw new DaoException("Exception while renting the bicycle: ", e);
         }
     }
 
     @Override
-    public boolean removeBicycle(long bicycle_id) throws DaoException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = CustomConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(REMOVE_BICYCLE_QUERY);
-            statement.setLong(1, bicycle_id);
+    public boolean removeBicycle(long bicycleId) throws DaoException {
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(REMOVE_BICYCLE_QUERY)){
+            statement.setLong(1, bicycleId);
             return statement.executeUpdate() != 0;
-        } catch (SQLException throwables) {
-            throw new DaoException("Failed to find user: ");
+        } catch (SQLException e) {
+            logger.log(Level.ERROR,"Exception while removing the bicycle");
+            throw new DaoException("Exception while removing the bicycle: ", e);
+        }
+    }
+
+    @Override
+    public boolean deleteBicycle(long bicycleId) throws DaoException {
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(DELETE_BICYCLE_QUERY)){
+            statement.setLong(1, bicycleId);
+            return statement.executeUpdate() != 0;
+        } catch (SQLException e) {
+            logger.log(Level.ERROR,"Exception while deleting the bicycle");
+            throw new DaoException("Exception while deleting the bicycle: ", e);
         }
     }
 

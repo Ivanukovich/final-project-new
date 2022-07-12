@@ -7,6 +7,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,9 +16,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.Optional;
 
-import static by.epam.bicyclerental.controller.command.Literal.COMMAND;
 import static by.epam.bicyclerental.controller.command.PagePath.ERROR_500;
-import static by.epam.bicyclerental.controller.command.PagePath.USER_PAGE;
+import static by.epam.bicyclerental.controller.command.Parameter.*;
 
 @WebServlet(urlPatterns = {"/controller"})
 public class Controller extends HttpServlet {
@@ -35,22 +36,27 @@ public class Controller extends HttpServlet {
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String commandName = request.getParameter(COMMAND);
-        logger.log(Level.DEBUG,"The command is " + commandName);
+        logger.log(Level.INFO,"The command is " + commandName);
         Optional<Command> command = CommandType.provideCommand(commandName);
         try {
             Router router;
-            if(command.isPresent()){
+            if(command.isPresent()) {
                 router = command.get().execute(request);
                 String page = router.getPagePath();
-                if(router.getRouterType() == Router.RouterType.FORWARD){
-                    logger.log(Level.INFO,"Forward type.");
-                    request.getRequestDispatcher(page).forward(request,response);
-                }else{
-                    logger.log(Level.INFO,"Redirect type.");
-                    response.sendRedirect(page);
+                logger.log(Level.INFO,"Page " + page);
+                switch (router.getRouterType()) {
+                    case FORWARD:
+                        logger.log(Level.DEBUG, "Forward type" + page);
+                        request.getRequestDispatcher(page).forward(request, response);
+                        break;
+                    case REDIRECT:
+                        logger.log(Level.DEBUG, "Redirect type");
+                        response.sendRedirect(page);
+                        break;
                 }
-            }else {
-                //response.sendRedirect(ERROR_500);
+            }
+            else {
+                response.sendRedirect(ERROR_500);
             }
         } catch (CommandException e) {
             logger.log(Level.ERROR,e.getMessage());

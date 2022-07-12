@@ -6,6 +6,6 @@
     <title>JSP - Hello World</title>
 </head>
 <body>
-    <jsp:forward page="/jsp/guest/login.jsp"></jsp:forward>
+    <jsp:forward page="/jsp/home.jsp"></jsp:forward>
 </body>
 </html>

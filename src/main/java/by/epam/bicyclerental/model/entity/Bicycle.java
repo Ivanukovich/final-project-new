@@ -3,7 +3,7 @@ package by.epam.bicyclerental.model.entity;
 public class Bicycle {
     private long bicycleId;
     private String model;
-    private BicycleStatus status;
+    private BicycleStatus bicycleStatus;
 
     public Bicycle() {
 
@@ -12,7 +12,7 @@ public class Bicycle {
     public Bicycle(long bicycleId, String model, BicycleStatus status, String location) {
         this.bicycleId = bicycleId;
         this.model = model;
-        this.status = status;
+        this.bicycleStatus = status;
     }
 
     public long getBicycleId() {
@@ -31,12 +31,12 @@ public class Bicycle {
         this.model = model;
     }
 
-    public BicycleStatus getStatus() {
-        return status;
+    public BicycleStatus getBicycleStatus() {
+        return bicycleStatus;
     }
 
-    public void setStatus(BicycleStatus status) {
-        this.status = status;
+    public void setBicycleStatus(BicycleStatus bicycleStatus) {
+        this.bicycleStatus = bicycleStatus;
     }
 
     public static class Builder {
@@ -48,7 +48,7 @@ public class Bicycle {
         }
 
         public Builder status(BicycleStatus status) {
-            bicycle.status = status;
+            bicycle.bicycleStatus = status;
             return this;
         }
 
@@ -74,14 +74,14 @@ public class Bicycle {
         Bicycle bicycle = (Bicycle) o;
         return bicycleId == bicycle.bicycleId &&
                 model.equals(bicycle.model) &&
-                status.equals(bicycle.status);
+                bicycleStatus.equals(bicycle.bicycleStatus);
     }
 
     @Override
     public int hashCode() {
         int result = (int) (bicycleId ^ (bicycleId >>> 32));
         result = 31 * result + (model != null ? model.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (bicycleStatus != null ? bicycleStatus.hashCode() : 0);
         return result;
     }
     @Override
@@ -89,7 +89,7 @@ public class Bicycle {
         final StringBuilder result = new StringBuilder("Bicycle {");
         result .append("bicycleId: ").append(bicycleId);
         result .append(", model: ").append(model);
-        result .append(", status: ").append(status);
+        result .append(", status: ").append(bicycleStatus);
         result.append('}');
         return result.toString();
     }

@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RentalPointDaoImpl implements RentalPointDao {
     private static final Logger logger = LogManager.getLogger();
@@ -42,104 +43,127 @@ public class RentalPointDaoImpl implements RentalPointDao {
     private static final String ADD_BICYCLE_QUERY = "INSERT INTO bicycle_rental_point (bicycle_id, rental_point_id) " +
             "VALUES (?, ?);";
 
+    private static final String DELETE_RENTAL_POINT_QUERY = "DELETE FROM rental_point " +
+            "WHERE rental_point_id = ?;";
+
+
+    private static final String UPDATE_QUERY = "UPDATE rental_point " +
+            "SET location = ? " +
+            "WHERE rental_point_id = ?;";
+
 
     @Override
     public List<RentalPoint> findAllRentalPoints() throws DaoException {
         List<RentalPoint> rentalPoints = new ArrayList<>();
-        PreparedStatement statement = null;
-        try{
-            Connection connection = CustomConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(SELECT_ALL_RENTAL_POINTS_QUERY);
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_RENTAL_POINTS_QUERY)){
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
                 rentalPoints.add(extract(resultSet));
-
             }
-            logger.log(Level.INFO,"List: " + rentalPoints);
+            logger.log(Level.INFO,"Rental point list: {} ", rentalPoints);
+            return rentalPoints;
         } catch (SQLException e) {
-            throw new DaoException(e);
+            logger.log(Level.ERROR,"Exception while finding all rental points");
+            throw new DaoException("Exception while finding all rental points: ", e);
         }
-        return rentalPoints;
     }
 
     @Override
-    public RentalPoint findByRentalPointId(long rental_point_id) throws DaoException {
-        RentalPoint rentalPoint = null;
-        try {
-            Connection connection = CustomConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(SELECT_BY_RENTAL_POINT_ID_QUERY);
-            statement.setLong(1, rental_point_id);
+    public Optional<RentalPoint> findByRentalPointId(long rentalPointId) throws DaoException {
+        Optional<RentalPoint> rentalPoint = Optional.empty();
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SELECT_BY_RENTAL_POINT_ID_QUERY)){
+            statement.setLong(1, rentalPointId);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                rentalPoint = extract(resultSet);
+                rentalPoint = Optional.of(extract(resultSet));
             }
+            return rentalPoint;
         } catch (SQLException e) {
-            throw new DaoException("", e);
+            logger.log(Level.ERROR,"Exception while finding rental point by id");
+            throw new DaoException("Exception while finding rental point by id: ", e);
         }
-        logger.log(Level.DEBUG, "");
-        return rentalPoint;
     }
 
     @Override
-    public RentalPoint findByBicycleId(long bicycle_id) throws DaoException {
-        RentalPoint rentalPoint = null;
-        try {
-            Connection connection = CustomConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(SELECT_RENTAL_POINT_BICYCLE_QUERY);
-            statement.setLong(1, bicycle_id);
+    public Optional<RentalPoint> findByBicycleId(long bicycleId) throws DaoException {
+        Optional<RentalPoint> rentalPoint = Optional.empty();
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SELECT_RENTAL_POINT_BICYCLE_QUERY)){
+            statement.setLong(1, bicycleId);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                rentalPoint = extract(resultSet);
+                rentalPoint = Optional.of(extract(resultSet));
             }
+            return rentalPoint;
         } catch (SQLException e) {
-            throw new DaoException("", e);
+            logger.log(Level.ERROR,"Exception while finding rental point by bicycle id");
+            throw new DaoException("Exception while finding rental point by bicycle id: ", e);
         }
-        logger.log(Level.DEBUG, "");
-        return rentalPoint;
     }
 
 
     @Override
-    public boolean addBicycle(long bicycle_id, long rental_point_id) throws DaoException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try{
-            connection = CustomConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(ADD_BICYCLE_QUERY);
-            statement.setLong(1, bicycle_id);
-            statement.setLong(2, rental_point_id);
+    public boolean addBicycle(long bicycleId, long rentalPointId) throws DaoException {
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(ADD_BICYCLE_QUERY)){
+            statement.setLong(1, bicycleId);
+            statement.setLong(2, rentalPointId);
             return statement.executeUpdate() == 1;
         } catch (SQLException e) {
-            throw new DaoException("", e);
+            logger.log(Level.ERROR,"Exception while adding the bicycle to rental point");
+            throw new DaoException("Exception while adding the bicycle to rental point: ", e);
         }
     }
 
     @Override
     public boolean create(RentalPoint rentalPoint) throws DaoException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = CustomConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(INSERT_RENTAL_POINT_QUERY);
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(INSERT_RENTAL_POINT_QUERY)){
             statement.setString(1, rentalPoint.getLocation());
             return statement.executeUpdate() != 0;
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user: ", e);
+            logger.log(Level.ERROR,"Exception while creating rental point");
+            throw new DaoException("Exception while creating rental point: ", e);
         }
     }
 
     @Override
-    public boolean checkIfBicycleIsPresent(long rental_point_id, long bicycle_id) throws DaoException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = CustomConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(SELECT_BICYCLE_RENTAL_POINT_QUERY);
-            statement.setLong(1, bicycle_id);
-            statement.setLong(2, rental_point_id);
+    public boolean checkIfBicycleIsPresent(long rentalPointId, long bicycleId) throws DaoException {
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SELECT_BICYCLE_RENTAL_POINT_QUERY)){
+            statement.setLong(1, bicycleId);
+            statement.setLong(2, rentalPointId);
             return statement.executeQuery().next();
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user: ", e);
+            logger.log(Level.ERROR,"Exception while checking bicycle presence on rental point");
+            throw new DaoException("Exception while checking bicycle presence on rental point: ", e);
+        }
+    }
+
+    @Override
+    public boolean deleteRentalPoint(long rentalPointId) throws DaoException {
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(DELETE_RENTAL_POINT_QUERY)){
+            statement.setLong(1, rentalPointId);
+            return statement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            logger.log(Level.ERROR,"Exception while deleting rental point");
+            throw new DaoException("Exception while deleting rental point: ", e);
+        }
+    }
+
+    @Override
+    public boolean update(RentalPoint rentalPoint) throws DaoException {
+        try(Connection connection = CustomConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)){
+            statement.setString(1, rentalPoint.getLocation());
+            statement.setLong(2, rentalPoint.getRentalPointId());
+            return statement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            logger.log(Level.ERROR,"Exception while updating the rental point");
+            throw new DaoException("Exception while updating the rental point: ", e);
         }
     }
 
