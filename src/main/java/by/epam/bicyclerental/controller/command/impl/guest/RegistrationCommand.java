@@ -54,7 +54,6 @@ public class RegistrationCommand implements Command {
             } else {
                 for (String key : formData.keySet()) {
                     String currentValue = formData.get(key);
-                    logger.log(Level.INFO, currentValue);
                     switch (currentValue) {
                         case LOGIN_ALREADY_EXISTS:
                             request.setAttribute(LOGIN_ALREADY_EXISTS, LOGIN_ALREADY_EXISTS_MESSAGE);

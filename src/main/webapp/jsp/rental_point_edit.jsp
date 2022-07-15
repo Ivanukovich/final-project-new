@@ -45,7 +45,7 @@
                 <br/>
                 <div class="row">
                     <label class="form-label">${location}</label>
-                    <input type="text" maxlength="20" name="location" class="form-control form-control-sm" value = ${rental_point.location}>
+                    <input type="text" maxlength="40" name="location" class="form-control form-control-sm" value = ${rental_point.location}>
                 </div>
                 <br/>
                 <div class="text-center mb-3">
@@ -122,6 +122,6 @@
        href="${absolutePath}/controller?command=find_all_rental_points"><fmt:message key="common.back"/>
     </a>
 </div>
-<c:import url="footer.jsp"/>
+<c:import url="footer/footer.jsp"/>
 </body>
 </html>

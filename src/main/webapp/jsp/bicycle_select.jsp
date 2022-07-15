@@ -57,6 +57,6 @@
     <br/>
     <a class="btn btn-secondary" href="${absolutePath}/controller?command=find_available_rental_points"><fmt:message key="common.back"/></a>
 </div>
-<c:import url="footer.jsp"/>
+<c:import url="footer/footer.jsp"/>
 </body>
 </html>

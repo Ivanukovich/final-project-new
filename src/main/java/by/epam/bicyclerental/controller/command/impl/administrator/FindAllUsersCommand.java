@@ -18,6 +18,7 @@ import static by.epam.bicyclerental.controller.command.PagePath.USER_LIST_PAGE;
 
 public class FindAllUsersCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
+
     private static final UserService userService = UserServiceImpl.getInstance();
 
     @Override

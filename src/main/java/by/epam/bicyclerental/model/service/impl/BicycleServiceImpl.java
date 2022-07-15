@@ -35,12 +35,12 @@ public class BicycleServiceImpl implements BicycleService {
     }
 
     @Override
-    public boolean addBicycletoDataBase(Bicycle bicycle) throws ServiceException {
+    public boolean addBicycleToDataBase(Bicycle bicycle) throws ServiceException {
         try {
             return bicycleDao.create(bicycle);
         }
         catch (DaoException e){
-            throw new ServiceException("Exception in bicycle service method addBicycletoDataBase: ", e);
+            throw new ServiceException("Exception in bicycle service method addBicycleToDataBase: ", e);
         }
     }
 

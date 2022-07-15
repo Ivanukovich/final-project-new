@@ -25,6 +25,7 @@ import static by.epam.bicyclerental.controller.command.Parameter.*;
 
 public class AddNewUserCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
+
     private static final UserService userService = UserServiceImpl.getInstance();
 
     @Override

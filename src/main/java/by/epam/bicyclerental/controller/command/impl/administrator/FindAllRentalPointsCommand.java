@@ -23,8 +23,8 @@ import static by.epam.bicyclerental.controller.command.PagePath.RENTAL_POINT_LIS
 
 public class FindAllRentalPointsCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
+
     private static final RentalPointService rentalPointService = RentalPointServiceImpl.getInstance();
-    private static final BicycleService bicycleService = BicycleServiceImpl.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {

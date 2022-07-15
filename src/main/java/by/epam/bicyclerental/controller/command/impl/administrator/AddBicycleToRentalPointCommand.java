@@ -22,6 +22,7 @@ import static by.epam.bicyclerental.controller.command.Parameter.*;
 
 public class AddBicycleToRentalPointCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
+
     private static final BicycleService bicycleService = BicycleServiceImpl.getInstance();
     private static final RentalPointService rentalPointService = RentalPointServiceImpl.getInstance();
 

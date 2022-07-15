@@ -22,6 +22,7 @@ import static by.epam.bicyclerental.controller.command.Parameter.BICYCLE_LIST;
 
 public class DeleteBicycleCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
+
     private static final BicycleService bicycleService = BicycleServiceImpl.getInstance();
 
     @Override

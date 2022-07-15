@@ -9,7 +9,7 @@ public class Bicycle {
 
     }
 
-    public Bicycle(long bicycleId, String model, BicycleStatus status, String location) {
+    public Bicycle(long bicycleId, String model, BicycleStatus status) {
         this.bicycleId = bicycleId;
         this.model = model;
         this.bicycleStatus = status;

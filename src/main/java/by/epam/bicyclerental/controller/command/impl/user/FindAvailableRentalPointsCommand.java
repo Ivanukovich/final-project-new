@@ -20,17 +20,17 @@ import static by.epam.bicyclerental.controller.command.PagePath.RENTAL_POINT_SEL
 
 public class FindAvailableRentalPointsCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
+
     private static final RentalPointService rentalPointService = RentalPointServiceImpl.getInstance();
-    private static final BicycleService bicycleService = BicycleServiceImpl.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         try {
             List<RentalPoint> rentalPointList = rentalPointService.findAllRentalPoints();
             request.setAttribute(RENTAL_POINT_LIST, rentalPointList);
+            return new Router(RENTAL_POINT_SELECT_PAGE, Router.RouterType.FORWARD);
         } catch (ServiceException e) {
-            throw new CommandException("Exception in a FindAllRentalPoints class ", e);
+            throw new CommandException("Exception in a FindAvailableRentalPointsCommand: ", e);
         }
-        return new Router(RENTAL_POINT_SELECT_PAGE, Router.RouterType.FORWARD);
     }
 }

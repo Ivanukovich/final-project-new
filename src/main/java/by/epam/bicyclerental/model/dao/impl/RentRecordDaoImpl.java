@@ -57,6 +57,7 @@ public class RentRecordDaoImpl implements RentRecordDao {
                 rentRecordList.add(extract(resultSet));
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Exception while finding all rent records");
             throw new DaoException("Exception while finding all rent records: ", e);
         }
         return rentRecordList;
@@ -91,8 +92,8 @@ public class RentRecordDaoImpl implements RentRecordDao {
             }
             return rent;
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Exception while finding by user id");
-            throw new DaoException("Exception while finding by user id: ", e);
+            logger.log(Level.ERROR, "Exception while finding rent record by user id");
+            throw new DaoException("Exception while finding rent record by user id: ", e);
         }
     }
 
@@ -155,7 +156,7 @@ public class RentRecordDaoImpl implements RentRecordDao {
             statement.setLong(1, bicycleId);
             return statement.executeUpdate() != 0;
         } catch (SQLException e) {
-            logger.log(Level.ERROR,"Exception while deleting  the rents by bicycle id");
+            logger.log(Level.ERROR,"Exception while deleting the rents by bicycle id");
             throw new DaoException("Exception while deleting the rents by bicycle id: ", e);
         }
     }
@@ -167,7 +168,7 @@ public class RentRecordDaoImpl implements RentRecordDao {
             statement.setLong(1, rentalPointId);
             return statement.executeUpdate() != 0;
         } catch (SQLException e) {
-            logger.log(Level.ERROR,"Exception while deleting  the rents by bicycle id");
+            logger.log(Level.ERROR,"Exception while deleting the rents by bicycle id");
             throw new DaoException("Exception while deleting the rents by bicycle id: ", e);
         }
     }

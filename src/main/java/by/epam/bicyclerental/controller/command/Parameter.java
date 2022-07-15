@@ -69,7 +69,6 @@ public class Parameter {
 
     public static final String USER_LIST = "user_list";
 
-    public static final String PAGE_PATH ="path";
     public static final String CURRENT_PAGE = "current_page";
 
     public static Parameter getInstance() {

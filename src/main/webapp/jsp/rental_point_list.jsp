@@ -63,6 +63,6 @@
     <br/>
     <a class="btn btn-secondary" href="${pageContext.request.contextPath}/jsp/database_control.jsp"><fmt:message key="common.back"/></a>
 </div>
-<c:import url="footer.jsp"/>
+<c:import url="footer/footer.jsp"/>
 </body>
 </html>

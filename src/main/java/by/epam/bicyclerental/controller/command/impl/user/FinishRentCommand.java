@@ -42,7 +42,7 @@ public class FinishRentCommand implements Command {
             return new Router(PagePath.USER_PAGE, Router.RouterType.REDIRECT);
         }
         catch (ServiceException e){
-            throw new CommandException("", e);
+            throw new CommandException("Exception in FinishRentCommand: ", e);
         }
     }
 }

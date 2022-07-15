@@ -21,8 +21,8 @@ import static by.epam.bicyclerental.controller.command.PagePath.USER_PAGE;
 
 public class RentBicycleCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
+
     private static final RentRecordService rentService = new RentRecordServiceImpl();
-    private static final UserService userService = new UserServiceImpl();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
@@ -38,7 +38,7 @@ public class RentBicycleCommand implements Command {
         }
 
         catch (ServiceException e){
-            throw new CommandException("", e);
+            throw new CommandException("Exception in RentBicycleCommand: ", e);
         }
     }
 }

@@ -28,6 +28,7 @@ import static by.epam.bicyclerental.controller.command.Parameter.INACTIVE_BICYCL
 
 public class DeleteRentalPointCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
+
     private static final RentalPointService rentalPointService = RentalPointServiceImpl.getInstance();
 
     @Override
@@ -35,7 +36,6 @@ public class DeleteRentalPointCommand implements Command {
         long rentalPointId = Integer.parseInt(request.getParameter(RENTAL_POINT_ID));
         try {
             rentalPointService.deleteRentalPoint(rentalPointId);
-            logger.log(Level.INFO, "done!");
             List<RentalPoint> rentalPointList = rentalPointService.findAllRentalPoints();
             request.setAttribute(RENTAL_POINT_LIST, rentalPointList);
             return new Router(RENTAL_POINT_LIST_PAGE, Router.RouterType.FORWARD);

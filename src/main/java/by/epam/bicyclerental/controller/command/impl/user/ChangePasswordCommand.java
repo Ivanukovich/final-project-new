@@ -57,7 +57,7 @@ public class ChangePasswordCommand implements Command {
             }
         }
         catch (ServiceException e){
-            throw new CommandException("", e);
+            throw new CommandException("Exception in ChangePasswordCommand: ", e);
         }
     }
 }

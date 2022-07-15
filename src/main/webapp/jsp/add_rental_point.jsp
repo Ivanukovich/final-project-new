@@ -35,7 +35,7 @@
 
                 <div class="col">
                     <label class="form-label"><fmt:message key="administrator.location"/></label>
-                    <input type="text" maxlength="20" name="location" class="form-control form-control-sm">
+                    <input type="text" maxlength="40" name="location" class="form-control form-control-sm">
                 </div>
                 
                 <br/>
@@ -50,6 +50,6 @@
         <fmt:message key="common.back"/>
     </a>
 </div>
-<c:import url="footer.jsp"/>
+<c:import url="footer/footer.jsp"/>
 </body>
 </html>

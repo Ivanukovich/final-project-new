@@ -20,6 +20,7 @@ import static by.epam.bicyclerental.controller.command.Parameter.USER_LIST;
 
 public class DeleteUserCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
+
     private static final UserService userService = UserServiceImpl.getInstance();
 
     @Override

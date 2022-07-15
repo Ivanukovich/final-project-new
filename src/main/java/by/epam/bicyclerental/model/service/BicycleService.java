@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface BicycleService {
-    boolean addBicycletoDataBase(Bicycle bicycle) throws ServiceException;
+    boolean addBicycleToDataBase(Bicycle bicycle) throws ServiceException;
     boolean returnBicycle(long userId) throws ServiceException;
     boolean removeBicycle(long bicycleId) throws ServiceException;
     boolean updateBicycle(long bicycleId, String model) throws ServiceException;

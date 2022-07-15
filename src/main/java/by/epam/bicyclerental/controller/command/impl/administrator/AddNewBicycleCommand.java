@@ -20,6 +20,7 @@ import static by.epam.bicyclerental.controller.command.Parameter.BICYCLE_LIST;
 
 public class AddNewBicycleCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
+
     private static final BicycleService bicycleService = BicycleServiceImpl.getInstance();
 
     @Override
@@ -30,7 +31,7 @@ public class AddNewBicycleCommand implements Command {
                 .status(BicycleStatus.FREE)
                 .build();
         try {
-            bicycleService.addBicycletoDataBase(bicycle);
+            bicycleService.addBicycleToDataBase(bicycle);
             List<Bicycle> bicycleList = bicycleService.findAllBicycles();
             request.setAttribute(BICYCLE_LIST, bicycleList);
             return new Router(PagePath.BICYCLE_LIST_PAGE, Router.RouterType.FORWARD);

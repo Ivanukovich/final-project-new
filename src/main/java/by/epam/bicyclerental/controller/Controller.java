@@ -25,12 +25,12 @@ public class Controller extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.log(Level.DEBUG,"It's a " + request.getMethod());
+        logger.log(Level.DEBUG,"Method: " + request.getMethod());
         processRequest(request, response);
     }
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.log(Level.DEBUG,"It's a " + request.getMethod());
+        logger.log(Level.DEBUG,"Method: " + request.getMethod());
         processRequest(request, response);
     }
 
@@ -46,7 +46,7 @@ public class Controller extends HttpServlet {
                 logger.log(Level.INFO,"Page " + page);
                 switch (router.getRouterType()) {
                     case FORWARD:
-                        logger.log(Level.DEBUG, "Forward type" + page);
+                        logger.log(Level.DEBUG, "Forward type");
                         request.getRequestDispatcher(page).forward(request, response);
                         break;
                     case REDIRECT:

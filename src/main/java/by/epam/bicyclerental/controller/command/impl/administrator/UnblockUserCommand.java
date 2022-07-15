@@ -24,6 +24,7 @@ import static by.epam.bicyclerental.controller.command.Parameter.USER_LIST;
 
 public class UnblockUserCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
+
     public static final UserService userService = new UserServiceImpl();
 
     @Override

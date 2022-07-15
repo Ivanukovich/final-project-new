@@ -51,7 +51,7 @@
         <fmt:message key="common.back"/>
     </a>
 </div>
-<c:import url="footer.jsp"/>
+<c:import url="footer/footer.jsp"/>
 </body>
 </html>
 

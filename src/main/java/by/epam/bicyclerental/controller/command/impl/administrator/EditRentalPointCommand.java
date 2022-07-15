@@ -23,6 +23,7 @@ import static by.epam.bicyclerental.controller.command.Parameter.USER;
 
 public class EditRentalPointCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
+
     private static final RentalPointService rentalPointService = RentalPointServiceImpl.getInstance();
 
     @Override

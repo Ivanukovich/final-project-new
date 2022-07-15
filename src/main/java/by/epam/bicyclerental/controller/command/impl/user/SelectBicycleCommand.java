@@ -23,6 +23,7 @@ import static by.epam.bicyclerental.controller.command.PagePath.RENT_CONFIRMATIO
 
 public class SelectBicycleCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
+
     private static final BicycleService bicycleService = BicycleServiceImpl.getInstance();
     private static final RentalPointService rentalPointService = RentalPointServiceImpl.getInstance();
 
@@ -39,7 +40,7 @@ public class SelectBicycleCommand implements Command {
             }
             return new Router(RENT_CONFIRMATION_PAGE, Router.RouterType.FORWARD);
         } catch (ServiceException e) {
-            throw new CommandException("Exception in a FindAllRentalPoints class ", e);
+            throw new CommandException("Exception in a SelectBicycleCommand: ", e);
         }
     }
 }

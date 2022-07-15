@@ -1,6 +1,8 @@
 package by.epam.bicyclerental.controller.filter;
 
 import by.epam.bicyclerental.controller.command.Parameter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -10,6 +12,7 @@ import java.io.IOException;
 
 @WebFilter(urlPatterns = {"/*"})
 public class LocaleFilter implements Filter {
+    private static final Logger logger = LogManager.getLogger();
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

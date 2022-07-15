@@ -4,6 +4,7 @@ import by.epam.bicyclerental.controller.command.Command;
 import by.epam.bicyclerental.controller.command.Parameter;
 import by.epam.bicyclerental.controller.command.PagePath;
 import by.epam.bicyclerental.controller.Router;
+import by.epam.bicyclerental.exception.CommandException;
 import by.epam.bicyclerental.exception.ServiceException;
 import by.epam.bicyclerental.model.entity.User;
 import by.epam.bicyclerental.model.service.UserService;
@@ -21,10 +22,11 @@ import static by.epam.bicyclerental.controller.command.Parameter.INCORRECT_LOGIN
 
 public class LogInCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
+
     private static final UserService userService = UserServiceImpl.getInstance();
 
     @Override
-    public Router execute(HttpServletRequest request) {
+    public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         String login = request.getParameter(Parameter.LOGIN);
         String password = request.getParameter(Parameter.PASSWORD);
@@ -48,8 +50,7 @@ public class LogInCommand implements Command {
                 return new Router(PagePath.LOG_IN_PAGE, Router.RouterType.FORWARD);
             }
         } catch (ServiceException e) {
-            e.printStackTrace();
-            return new Router(PagePath.ERROR_500, Router.RouterType.REDIRECT);
+            throw new CommandException("Exception in LogInCommand: ", e);
         }
     }
 }

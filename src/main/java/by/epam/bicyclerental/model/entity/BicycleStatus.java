@@ -4,7 +4,7 @@ public enum BicycleStatus {
     FREE("free"),
     RENTED("rented"),
     INACTIVE("inactive");
-    private String statusName;
+    private final String statusName;
 
     BicycleStatus (String status){
         this.statusName = status;

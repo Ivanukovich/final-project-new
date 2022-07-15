@@ -19,6 +19,7 @@ import static by.epam.bicyclerental.controller.command.Parameter.RENTAL_POINT_LI
 
 public class AddNewRentalPointCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
+
     private static final RentalPointService rentalPointService = RentalPointServiceImpl.getInstance();
 
     @Override

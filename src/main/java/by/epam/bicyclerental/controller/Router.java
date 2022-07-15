@@ -14,12 +14,13 @@ public class Router {
     private static final Logger logger = LogManager.getLogger();
     private final String pagePath;
     private final RouterType routerType;
+    private static final String PATH = "/bicyclerental_war_exploded";
 
     public Router(String pagePath, RouterType routerType) {
         this.routerType = routerType;
         if (routerType == REDIRECT)
         {
-            this.pagePath = "/bicyclerental_war_exploded" + pagePath;
+            this.pagePath = PATH + pagePath;
         }
         else
         {
