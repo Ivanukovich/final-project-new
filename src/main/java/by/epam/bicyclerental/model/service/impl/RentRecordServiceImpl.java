@@ -25,10 +25,10 @@ public class RentRecordServiceImpl implements RentRecordService {
     private static RentRecordServiceImpl instance;
     private static Timestamp timestamp;
     private static final Logger logger = LogManager.getLogger();
-    private static final RentRecordDao rentRecordDao = new RentRecordDaoImpl();
-    private static final RentalPointDao rentalPointDao = new RentalPointDaoImpl();
-    private static final UserDao userDao = new UserDaoImpl();
-    private static final BicycleDao bicycleDao = new BicycleDaoImpl();
+    private static final RentRecordDao rentRecordDao = RentRecordDaoImpl.getInstance();
+    private static final RentalPointDao rentalPointDao = RentalPointDaoImpl.getInstance();
+    private static final UserDao userDao = UserDaoImpl.getInstance();
+    private static final BicycleDao bicycleDao = BicycleDaoImpl.getInstance();
 
     public static RentRecordService getInstance() {
         if (instance == null) {

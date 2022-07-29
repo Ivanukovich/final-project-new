@@ -4,6 +4,8 @@ import by.epam.bicyclerental.exception.DaoException;
 import by.epam.bicyclerental.model.dao.BicycleDao;
 import by.epam.bicyclerental.model.entity.*;
 import by.epam.bicyclerental.model.pool.CustomConnectionPool;
+import by.epam.bicyclerental.model.service.BicycleService;
+import by.epam.bicyclerental.model.service.impl.BicycleServiceImpl;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -73,6 +75,15 @@ public class BicycleDaoImpl implements BicycleDao {
 
     private static final String RENT_BICYCLE_QUERY = "INSERT INTO rent (bicycle_id, user_id, rental_point_id) " +
             "VALUES (?, ?, ?);";
+
+    private static BicycleDaoImpl instance;
+
+    public static BicycleDao getInstance() {
+        if (instance == null) {
+            instance = new BicycleDaoImpl();
+        }
+        return instance;
+    }
 
     @Override
     public List<Bicycle> findAllBicycles() throws DaoException {

@@ -9,7 +9,7 @@ public class User {
     private String email;
     private UserRole role;
     private UserStatus userStatus;
-    boolean blocked;
+    private boolean blocked;
 
     public User() {
     }

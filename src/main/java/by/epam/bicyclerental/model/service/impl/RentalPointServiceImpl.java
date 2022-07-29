@@ -27,9 +27,9 @@ public class RentalPointServiceImpl implements RentalPointService {
     private static RentalPointServiceImpl instance;
     private static final Logger logger = LogManager.getLogger();
 
-    private static final RentalPointDao rentalPointDao = new RentalPointDaoImpl();
-    private static final BicycleDao bicycleDao = new BicycleDaoImpl();
-    private static final RentRecordDao rentRecordDao = new RentRecordDaoImpl();
+    private static final RentalPointDao rentalPointDao = RentalPointDaoImpl.getInstance();
+    private static final BicycleDao bicycleDao = BicycleDaoImpl.getInstance();
+    private static final RentRecordDao rentRecordDao = RentRecordDaoImpl.getInstance();
 
     public static RentalPointService getInstance() {
         if (instance == null) {

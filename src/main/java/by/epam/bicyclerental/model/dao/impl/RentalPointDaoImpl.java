@@ -51,6 +51,14 @@ public class RentalPointDaoImpl implements RentalPointDao {
             "SET location = ? " +
             "WHERE rental_point_id = ?;";
 
+    private static RentalPointDaoImpl instance;
+
+    public static RentalPointDao getInstance() {
+        if (instance == null) {
+            instance = new RentalPointDaoImpl();
+        }
+        return instance;
+    }
 
     @Override
     public List<RentalPoint> findAllRentalPoints() throws DaoException {

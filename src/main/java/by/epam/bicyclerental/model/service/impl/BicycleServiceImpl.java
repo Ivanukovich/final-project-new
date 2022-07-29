@@ -22,9 +22,9 @@ import java.util.Optional;
 public class BicycleServiceImpl implements BicycleService {
     private static final Logger logger = LogManager.getLogger();
 
-    private static final BicycleDao bicycleDao = new BicycleDaoImpl();
-    private static final UserDao userDao = new UserDaoImpl();
-    private static final RentRecordDao rentDao = new RentRecordDaoImpl();
+    private static final BicycleDao bicycleDao = BicycleDaoImpl.getInstance();
+    private static final UserDao userDao = UserDaoImpl.getInstance();
+    private static final RentRecordDao rentDao = RentRecordDaoImpl.getInstance();
     private static BicycleServiceImpl instance;
 
     public static BicycleService getInstance() {

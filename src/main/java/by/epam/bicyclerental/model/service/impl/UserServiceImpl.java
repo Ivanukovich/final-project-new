@@ -26,8 +26,8 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger();
 
     private static UserServiceImpl instance;
-    private static final  UserDao userDao = UserDaoImpl.getInstance();
-    private static final RentRecordDao rentDao = new RentRecordDaoImpl();
+    private static final UserDao userDao = UserDaoImpl.getInstance();
+    private static final RentRecordDao rentDao = RentRecordDaoImpl.getInstance();
 
     public static UserService getInstance() {
         if (instance == null) {

@@ -47,6 +47,15 @@ public class RentRecordDaoImpl implements RentRecordDao {
     private static final String DELETE_RENTS_BY_RENTAL_POINT_ID_QUERY = "DELETE FROM rent " +
             "WHERE rental_point_id = ?;";
 
+    private static RentRecordDaoImpl instance;
+
+    public static RentRecordDao getInstance() {
+        if (instance == null) {
+            instance = new RentRecordDaoImpl();
+        }
+        return instance;
+    }
+
     @Override
     public List<RentRecord> findAllRentRecords() throws DaoException {
         List<RentRecord> rentRecordList = new ArrayList<>();
@@ -84,7 +93,7 @@ public class RentRecordDaoImpl implements RentRecordDao {
     public Optional<RentRecord> findByUserId(long userId) throws DaoException {
         Optional<RentRecord> rent = Optional.empty();
         try(Connection connection = CustomConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(SELECT_RENT_BY_USER_ID_QUERY);){
+            PreparedStatement statement = connection.prepareStatement(SELECT_RENT_BY_USER_ID_QUERY)){
             statement.setLong(1, userId);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
